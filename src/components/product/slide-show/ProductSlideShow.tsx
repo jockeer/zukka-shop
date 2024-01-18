@@ -28,6 +28,7 @@ export const ProductSlideShow = ({ images, title, className }: Props) => {
         style={{
           '--swiper-navigation-color': '#713F12',
           '--swiper-pagination-color': '#713F12',
+          width: '90%'
         } as React.CSSProperties }
         autoplay={{delay: 2500}}
         spaceBetween={10}
@@ -44,6 +45,9 @@ export const ProductSlideShow = ({ images, title, className }: Props) => {
        
       </Swiper>
       <Swiper
+        style={{
+          width:'90%'
+        }}
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
         slidesPerView={4}
