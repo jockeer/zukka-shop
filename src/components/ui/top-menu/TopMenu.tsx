@@ -7,11 +7,11 @@ import { IoCartOutline, IoSearchOutline } from "react-icons/io5"
 export const TopMenu = () => {
     const openMenu = useUIStore( state => state.openSideMenu );
     return (
-        <nav className="flex px-5 py-2 justify-between items-center w-full">
+        <nav className="flex px-10 py-2 justify-between items-center w-full">
             <div >
                 <Link href={'/'}>
-                    <span className={`${titleFont.className} antialiased text-amber-900 font-bold`}>ZUKKA</span>
-                    <span className="font-bold"> | Shop</span>
+                    <span className={`${titleFont.className} antialiased text-amber-900 font-bold text-2xl`}>ZUKKA</span>
+                    <span className="font-bold text-xl"> | Shop</span>
                 </Link>
             </div>
             <div className="hidden sm:block">
