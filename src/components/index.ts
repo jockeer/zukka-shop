@@ -10,3 +10,4 @@ export { ProductSlideShow } from './product/slide-show/ProductSlideShow';
 export { ProductMobileSlideShow } from './product/slide-show/ProductMobileSlideShow';
 export { Footer } from './ui/footer/Footer';
 export { Pagination } from './ui/pagination/Pagination';
+export { StockLabel } from './product/stock-label/StockLabel';
