@@ -1,8 +1,8 @@
+import { getOrderById } from "@/actions";
 import { Title } from "@/components";
 import { initialData } from "@/seed/seed";
 import clsx from "clsx";
 import Image from "next/image";
-import Link from "next/link";
 import { IoCardOutline } from "react-icons/io5";
 
 const productsInCart = [
@@ -17,9 +17,13 @@ interface Props {
   }
 }
 
-export default function OrderPage({ params }: Props ) {
+export default async function OrderPage({ params }: Props ) {
   const { id } = params;
+
   //Todo : verificar id
+  const response = await getOrderById(id);
+  const { order } = response;
+  const { OrderAddress, OrderItem } = order;
 
   return (
     <div className="flex justify-center items-center mb-52 px-10 sm:px-0">
@@ -31,23 +35,23 @@ export default function OrderPage({ params }: Props ) {
 
               <div className={
                 clsx('flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5',{
-                  'bg-red-500': false,
-                  'bg-green-700': true,
+                  'bg-red-500': !order.isPaid,
+                  'bg-green-700': order.isPaid,
                 })
               }>
                 <IoCardOutline size={30}/>
                 {/* <span className="mx-2">Pending</span> */}
-                <span className="mx-2">Order paid</span>
+                <span className="mx-2">{order.isPaid ? 'Order paid':'Pending'}</span>
               </div>
             
             {/*  Items */}
-            { productsInCart.map( product => (
-              <div key={product.slug} className="flex mb-5">
-                <Image src={`/products/${product.images[0]}`} width={100} height={100} style={{width: 100, height: 100}} alt={product.title} className="mr-5 rounded"/>
+            { OrderItem.map( (item:any) => (
+              <div key={item.id} className="flex mb-5">
+                <Image src={`/products/${item.producto.ProductImage[0].url}`} width={100} height={100} style={{width: 100, height: 100}} alt={item.producto.title} className="mr-5 rounded"/>
                 <div>
-                  <p>{product.title}</p>
-                  <p>$ {product.price.toFixed(2)} x 3</p>
-                  <p  className="font-bold"> Subtotal: ${ product.price * 3 } </p>
+                  <p>{item.producto.title}</p>
+                  <p>$ {item.price.toFixed(2)} x {item.quantity}</p>
+                  <p  className="font-bold"> Subtotal: ${ (item.price * item.quantity).toFixed(2)} </p>
                 </div>
               </div>
             ))}
@@ -58,44 +62,46 @@ export default function OrderPage({ params }: Props ) {
               <h2 className="text-2xl mb-2 capitalize font-semibold">delivery address</h2>
               <div className="mb-10 grid grid-cols-2">
                 <p className="font-semibold">Name:</p>
-                <span>Daniel Gorianz Ferrufino</span>
+                <span>{OrderAddress.firstName} {OrderAddress.lastName}</span>
                 <p className="font-semibold">Address:</p>
-                <span>Av. Radial 13, B. Guapuro</span>
+                <span>{OrderAddress.address}</span>
+                <p className="font-semibold">Address2:</p>
+                <span>{OrderAddress.address2}</span>
                 <p className="font-semibold">Zip code: </p>
-                <span>00000</span>
+                <span>{OrderAddress.postalCode}</span>
                 <p className="font-semibold">Country: </p>
-                <span>Bolivia</span>
+                <span>{OrderAddress.countryId}</span>
                 <p className="font-semibold">City: </p>
-                <span>Santa Cruz</span>
+                <span>{OrderAddress.city}</span>
                 <p className="font-semibold">Phone: </p>
-                <span>+591 76597228</span>
+                <span>{OrderAddress.phone}</span>
               </div>
               <div className="w-full h-0.5 rounded bg-amber-900 mb-10"/>
               <h2 className="text-2xl mb-2 font-semibold">Summary</h2>
               <div className="grid grid-cols-2">
                 <span>No. Products</span>
-                <span className="text-right">3 Items</span>
+                <span className="text-right">{order.itemsInOrder} Items</span>
                 
                 <span>Subtotal</span>
-                <span className="text-right">$ 100</span>
+                <span className="text-right">$ {order.subTotal.toFixed(2)}</span>
 
                 <span>Taxes (15%) </span>
-                <span className="text-right">$ 100</span>
+                <span className="text-right">$ {order.tax.toFixed(2)}</span>
 
                 <span className="mt-5 text-2xl">Total </span>
-                <span className="text-right mt-5 text-2xl font-semibold">$ 100</span>
+                <span className="text-right mt-5 text-2xl font-semibold">$ {order.total.toFixed(2)}</span>
               </div>
               <div className="mt-5 mb-2 w-full">
 
                 <div className={
                   clsx('flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5',{
-                    'bg-red-500': false,
-                    'bg-green-700': true,
+                    'bg-red-500': !order.isPaid,
+                    'bg-green-700': order.isPaid,
                   })
                 }>
                   <IoCardOutline size={30}/>
                   {/* <span className="mx-2">Pending</span> */}
-                  <span className="mx-2">Order paid</span>
+                  <span className="mx-2">{order.isPaid ? 'Order paid':'Pending'}</span>
                 </div>
               </div>
           </div>
